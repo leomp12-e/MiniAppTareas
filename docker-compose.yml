@@ -1,0 +1,60 @@
+services:
+  # ---- Apache ----
+  apache:
+    build: ./apache
+    container_name: lamp-apache
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./apache/vhost.conf:/usr/local/apache2/conf/extra/vhost.conf:ro
+    command: >
+      sh -c "echo 'Include conf/extra/vhost.conf' >> conf/httpd.conf && httpd-foreground"
+    networks:
+      - lamp-network
+    depends_on:
+      - php-fpm
+    restart: unless-stopped
+
+  # ---- PHP-FPM ----
+  php-fpm:
+    build: ./php
+    container_name: lamp-php
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - lamp-network
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ---- MariaDB ----
+  mariadb:
+    image: mariadb:11
+    container_name: lamp-mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpass
+      MARIADB_DATABASE: lamp_db
+      MARIADB_USER: lamp_user
+      MARIADB_PASSWORD: lamp_pass
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./mariadb/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "3306:3306"
+    networks:
+      - lamp-network
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+networks:
+  lamp-network:
+    driver: bridge
+
+volumes:
+  mariadb_data:
