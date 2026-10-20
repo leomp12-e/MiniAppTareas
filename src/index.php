@@ -1,27 +1,21 @@
 <?php
 require_once __DIR__ . '/includes/auth.php';
 requireLogin();
+require_once __DIR__ . '/repos/MaterialRepo.php';
+
+$repo = new MaterialRepo();
+$materiales = $repo->findAll();
+
 require __DIR__ . '/includes/header.php';
-
-$stmt = db()->prepare('SELECT * FROM tareas WHERE usuario_id = ? ORDER BY creada_en DESC');
-$stmt->execute([currentUser()['id']]);
-$tareas = $stmt->fetchAll();
 ?>
-<h1>Mis tareas</h1>
-
-<form method="POST" action="tareas.php">
-  <input type="text" name="titulo" maxlength="150" placeholder="Nueva tarea" required>
-  <button>Añadir</button>
-</form>
+<h1>Catálogo de la biblioteca</h1>
 
 <ul>
-<?php foreach ($tareas as $t): ?>
+<?php foreach ($materiales as $m): ?>
   <li>
-    <form method="POST" action="tareas.php" style="display:inline">
-      <input type="hidden" name="toggle_id" value="<?= $t['id'] ?>">
-      <button type="submit"><?= $t['completada'] ? '☑' : '☐' ?></button>
-    </form>
-    <?= htmlspecialchars($t['titulo']) ?>
+    <?= htmlspecialchars($m->mostrarFicha()) ?>
+    — <?= $m->isDisponible() ? '✅ Disponible' : '❌ Prestado' ?>
+    · <a href="/material.php?id=<?= $m->getId() ?>">Ver ficha</a>
   </li>
 <?php endforeach; ?>
 </ul>
