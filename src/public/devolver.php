@@ -1,10 +1,10 @@
 <?php
-require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/../app/Includes/auth.php';
 requireLogin();
-require_once __DIR__ . '/repos/MaterialRepo.php';
+require_once __DIR__ . '/../app/Repos/MaterialRepo.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: index.php');
+    header('Location: /public/index.php');
     exit;
 }
 
@@ -47,5 +47,5 @@ $stmt = db()->prepare(
 );
 $stmt->execute([$prestamo['id']]);
 
-header('Location: material.php?id=' . $id);
+header('Location: /public/material.php?id=' . $id);
 exit;

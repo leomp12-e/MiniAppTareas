@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/../app/Includes/auth.php';
 requireAdmin();
-require __DIR__ . '/includes/header.php';
+require __DIR__ . '/../app/Includes/header.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
     $id = (int)$_POST['delete_id'];
@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
         $stmt = db()->prepare('DELETE FROM usuarios WHERE id = ?');
         $stmt->execute([$id]);
     }
-    header('Location: admin.php');
+    header('Location: /public/admin.php');
     exit;
 }
 
@@ -39,4 +39,4 @@ $usuarios = db()->query('SELECT id, email, rol, creado_en FROM usuarios ORDER BY
   <?php endforeach; ?>
 </table>
 
-<?php require __DIR__ . '/includes/footer.php'; ?>
+<?php require __DIR__ . '/../app/Includes/footer.php'; ?>

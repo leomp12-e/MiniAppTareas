@@ -1,8 +1,7 @@
 <?php
-// src/classes/MaterialBiblioteca.php
 require_once __DIR__ . '/Prestable.php';
-require_once __DIR__ . '/traits/TieneFechas.php';
-require_once __DIR__ . '/traits/Loggable.php';
+require_once __DIR__ . '/Traits/TieneFechas.php';
+require_once __DIR__ . '/Traits/Loggable.php';
 
 
 class MaterialBiblioteca implements Prestable {

@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/../app/Includes/auth.php';
 requireLogin();
-require_once __DIR__ . '/repos/MaterialRepo.php';
+require_once __DIR__ . '/../app/Repos/MaterialRepo.php';
 
 $id = (int)($_GET['id'] ?? 0);
 $repo = new MaterialRepo();
@@ -23,7 +23,8 @@ $stmt = db()->prepare(
 $stmt->execute([$id, currentUser()['id']]);
 $tienePrestamo = (bool)$stmt->fetch();
 
-require __DIR__ . '/includes/header.php';
+require __DIR__ . '/../app/Includes/header.php';
+
 ?>
 <h1><?= htmlspecialchars($material->mostrarFicha()) ?></h1>
 
@@ -38,15 +39,15 @@ require __DIR__ . '/includes/header.php';
 </dl>
 
 <?php if ($material->isDisponible()): ?>
-    <form method="POST" action="prestar.php">
+    <form method="POST" action="/public/prestar.php">
         <input type="hidden" name="material_id" value="<?= $material->getId() ?>">
         <button type="submit">Pedir prestado</button>
     </form>
 <?php else: ?>
-    <form method="POST" action="devolver.php">
+    <form method="POST" action="/public/devolver.php">
       <input type="hidden" name="material_id" value="<?= $material->getId() ?>">
       <button type="submit">Devolver material</button>
 </form>
 <?php endif; ?>
 
-<?php require __DIR__ . '/includes/footer.php'; ?>
+<?php require __DIR__ . '/../app/Includes/footer.php'; ?>

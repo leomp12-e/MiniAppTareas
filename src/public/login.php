@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/../app/Includes/auth.php';
 
 $error = '';
 $email = '';
@@ -23,14 +23,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'samesite' => 'Lax',
             ]);
         }
-        header('Location: index.php');
+        header('Location: /public/index.php');
         exit;
     } else {
         $error = 'Credenciales incorrectas.';
     }
 }
 
-require __DIR__ . '/includes/header.php';
+require __DIR__ . '/../app/Includes/header.php';
 ?>
 <h1>Iniciar sesión</h1>
 
@@ -55,4 +55,4 @@ require __DIR__ . '/includes/header.php';
   <button type="submit">Entrar</button>
 </form>
 
-<?php require __DIR__ . '/includes/footer.php'; ?>
+<?php require __DIR__ . '/../app/Includes/footer.php'; ?>
