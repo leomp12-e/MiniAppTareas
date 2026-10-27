@@ -1,16 +1,32 @@
 <?php
-require_once __DIR__ . '/../app/Includes/auth.php';
+declare(strict_types=1);
+
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../app/Includes/exceptions.php';
+
+use App\Exceptions\MaterialNoEncontradoException;
+use App\Repos\MaterialRepo;
+use function App\Config\db;
+use App\Includes\auth;
+
 requireLogin();
-require_once __DIR__ . '/../app/Repos/MaterialRepo.php';
 
 $id = (int)($_GET['id'] ?? 0);
-$repo = new MaterialRepo();
-$material = $repo->findById($id);
 
-if (!$material) {
+try {
+    $repo = new MaterialRepo();
+    $material = $repo->findById($id);
+} catch (MaterialNoEncontradoException $e) {
     http_response_code(404);
-    exit('Material no encontrado');
+    require __DIR__ . '/../app/Includes/header.php';
+    echo '<h1>Material no encontrado</h1>';
+    echo '<p>' . htmlspecialchars($e->getMessage()) . '</p>';
+    echo '<a href="/index.php">Volver al catalogo</a>';
+    require __DIR__ . '/../app/Includes/footer.php';
+    exit; 
 }
+
+require __DIR__ . '/../app/Includes/header.php';
 
 $stmt = db()->prepare(
     'SELECT id
@@ -39,12 +55,12 @@ require __DIR__ . '/../app/Includes/header.php';
 </dl>
 
 <?php if ($material->isDisponible()): ?>
-    <form method="POST" action="/public/prestar.php">
+    <form method="POST" action="prestar.php">
         <input type="hidden" name="material_id" value="<?= $material->getId() ?>">
         <button type="submit">Pedir prestado</button>
     </form>
 <?php else: ?>
-    <form method="POST" action="/public/devolver.php">
+    <form method="POST" action="devolver.php">
       <input type="hidden" name="material_id" value="<?= $material->getId() ?>">
       <button type="submit">Devolver material</button>
 </form>

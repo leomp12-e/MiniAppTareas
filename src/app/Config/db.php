@@ -1,4 +1,11 @@
 <?php
+declare(strict_types=1);
+
+namespace App\Config;
+
+use PDO;
+
+
 function db(): PDO {
     static $pdo = null;
     if ($pdo === null) {

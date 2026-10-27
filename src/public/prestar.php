@@ -1,27 +1,41 @@
 <?php
-require_once __DIR__ . '/../app/Includes/auth.php';
+declare(strict_types=1);
+
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../app/Includes/exceptions.php';
+
+use App\Exceptions\MaterialNoDisponibleException;
+use App\Exceptions\MaterialNoEncontradoException;
+use App\Includes\auth;
+use App\Repos\MaterialRepo;
+use App\Services\PrestamoService;
+
 requireLogin();
-require_once __DIR__ . '/../app/Repos/MaterialRepo.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /public/index.php');
+    header('Location: /index.php');
     exit;
 }
 
 $id = (int)($_POST['material_id'] ?? 0);
-$repo = new MaterialRepo();
-$material = $repo->findById($id);
 
-if (!$material) {
+try {
+    $service = new PrestamoService(new MaterialRepo());
+    $service->prestar($id, currentUser()['id']);
+
+    header('Location: /material.php?id=' . $id);
+    exit;
+
+} catch (MaterialNoEncontradoException $e) {
     http_response_code(404);
-    exit('Material no encontrado');
+    $error = $e->getMessage();
+} catch (MaterialNoDisponibleException $e) {
+    http_response_code(400);
+    $error = $e->getMessage();
 }
 
-if ($material->prestar()) {
-    $repo->setDisponible($id, false);
-    $repo->registrarPrestamo($id, currentUser()['id']);
-    $material->log("Préstamo de '{$material->getTitulo()}' a " . currentUser()['email']);
-}
-
-header('Location: /public/material.php?id=' . $id);
-exit;
+require __DIR__ . '/../app/Includes/header.php';
+echo '<h1>No se pudo completar el préstamo</h1>';
+echo '<p>' . htmlspecialchars($error) . '</p>';
+echo '<a href="/index.php">Volver al catálogo</a>';
+require __DIR__ . '/../app/Includes/footer.php';

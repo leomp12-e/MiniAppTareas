@@ -1,4 +1,8 @@
 <?php
+declare(strict_types=1);
+
+namespace App\Classes;
+
 require_once __DIR__ . '/Libro.php';
 
 class AudioLibro extends Libro {

@@ -1,8 +1,16 @@
 <?php
-require_once __DIR__ . '/../Config/db.php';
-require_once __DIR__ . '/../Classes/Libro.php';
-require_once __DIR__ . '/../Classes/Revista.php';
-require_once __DIR__ . '/../Classes/DVD.php';
+declare(strict_types=1);
+
+namespace App\Repos;
+
+use App\Classes\Mapa;
+use App\Classes\DVD;
+use App\Classes\Libro;
+use App\Classes\MaterialBiblioteca;
+use App\Classes\Revista;
+use function App\Config\db;
+use App\Exceptions\MaterialNoEncontradoException;
+
 
 class MaterialRepo {
 
@@ -15,11 +23,15 @@ class MaterialRepo {
         return $materiales;
     }
 
-    public function findById(int $id): ?MaterialBiblioteca {
+    public function findById(int $id): MaterialBiblioteca {
         $stmt = db()->prepare('SELECT * FROM materiales WHERE id = ?');
         $stmt->execute([$id]);
         $fila = $stmt->fetch();
-        return $fila ? $this->hidratar($fila) : null;
+       
+        if($fila === false) {
+            throw new MaterialNoEncontradoException($id);
+        }
+        return $this->hidratar($fila);
     }
 
     public function findDisponibles(): array {
@@ -67,6 +79,13 @@ class MaterialRepo {
             'dvd'     => new DVD(
                 $fila['titulo'], $fila['autor'], (int)$fila['anio'],
                 (int)$fila['duracion_min'], (bool)$fila['disponible'], (int)$fila['id']
+            ),
+            'mapa'  => new Mapa(
+                $fila['titulo'],
+                $fila['autor'],
+                $fila['anio'] !== null ? (int)$fila['anio'] : null,
+                (bool)$fila['disponible'],
+                (int)$fila['id']
             ),
             default   => throw new RuntimeException("Tipo desconocido: {$fila['tipo']}"),
         };

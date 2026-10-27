@@ -1,6 +1,8 @@
 <?php
 // src/classes/Libro.php
-require_once __DIR__ . '/MaterialBiblioteca.php';
+declare(strict_types=1);
+
+namespace App\Classes;
 
 class Libro extends MaterialBiblioteca {
     private string $isbn;

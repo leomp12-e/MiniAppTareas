@@ -1,5 +1,10 @@
 <?php
+declare(strict_types=1);
+
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../app/Includes/auth.php';
+
+require_once __DIR__ . '/../app/Includes/exceptions.php';
 
 $error = '';
 $email = '';
@@ -23,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'samesite' => 'Lax',
             ]);
         }
-        header('Location: /public/index.php');
+        header('Location: index.php');
         exit;
     } else {
         $error = 'Credenciales incorrectas.';

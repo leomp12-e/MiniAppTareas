@@ -1,7 +1,12 @@
 <?php
+declare(strict_types=1);
+
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../app/Includes/auth.php';
+
+use function App\Config\db;
+
 requireAdmin();
-require __DIR__ . '/../app/Includes/header.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
     $id = (int)$_POST['delete_id'];
@@ -9,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
         $stmt = db()->prepare('DELETE FROM usuarios WHERE id = ?');
         $stmt->execute([$id]);
     }
-    header('Location: /public/admin.php');
+    header('Location: admin.php');
     exit;
 }
 

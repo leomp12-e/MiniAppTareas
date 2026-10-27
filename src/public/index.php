@@ -1,7 +1,13 @@
 <?php
+declare(strict_types=1);
+
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../app/Includes/auth.php';
+require_once __DIR__ . '/../app/Includes/exceptions.php';
+
+use App\Repos\MaterialRepo;
+
 requireLogin();
-require_once __DIR__ . '/../app/Repos/MaterialRepo.php';
 
 $repo = new MaterialRepo();
 $materiales = $repo->findAll();
@@ -15,7 +21,7 @@ require __DIR__ . '/../app/Includes/header.php';
   <li>
     <?= htmlspecialchars($m->mostrarFicha()) ?>
     — <?= $m->isDisponible() ? '✅ Disponible' : '❌ Prestado' ?>
-    · <a href="/public/material.php?id=<?= $m->getId() ?>">Ver ficha</a>
+    · <a href="material.php?id=<?= $m->getId() ?>">Ver ficha</a>
   </li>
 <?php endforeach; ?>
 </ul>

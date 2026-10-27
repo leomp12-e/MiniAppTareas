@@ -1,14 +1,18 @@
 <?php
 // includes/auth.php — VERSIÓN REAL (sustituye al stub del Bloque 1)
+declare(strict_types=1);
 
 session_set_cookie_params([
     'httponly' => true,
     'samesite' => 'Lax',
     'path'     => '/',
 ]);
+
 session_start();
 
 require_once __DIR__ . '/../Config/db.php';
+
+use function App\Config\db;
 
 function login(string $email, string $pass): bool {
     $stmt = db()->prepare('SELECT id, email, password_hash, rol FROM usuarios WHERE email = ?');
