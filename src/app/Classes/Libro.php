@@ -1,10 +1,11 @@
 <?php
-// src/classes/Libro.php
+
 declare(strict_types=1);
 
 namespace App\Classes;
 
-class Libro extends MaterialBiblioteca {
+class Libro extends MaterialBiblioteca
+{
     private string $isbn;
     private string $editorial = '';
 
@@ -16,23 +17,44 @@ class Libro extends MaterialBiblioteca {
         bool $disponible = true,
         int $id = 0
     ) {
-        parent::__construct($titulo, $autor, $anio, $disponible, $id);
+        parent::__construct(
+            $titulo,
+            $autor,
+            $anio,
+            $disponible,
+            $id
+        );
+
         $this->isbn = $isbn;
     }
 
-    public function getIsbn(): string { return $this->isbn; }
+    public function getIsbn(): string
+    {
+        return $this->isbn;
+    }
 
-    public function getEditorial(): string {return $this->editorial; }
+    public function getEditorial(): string
+    {
+        return $this->editorial;
+    }
 
-    public function setEditorial(string $e): void { $this->editorial = $e; }
+    public function setEditorial(string $e): void
+    {
+        $this->editorial = $e;
+    }
 
-    public function tipoMaterial(): string { return 'Libro'; }
+    public function tipoMaterial(): string
+    {
+        return 'Libro';
+    }
 
-    public function mostrarFicha(): string {
+    public function mostrarFicha(): string
+    {
         return parent::mostrarFicha() . ' · ISBN: ' . $this->isbn;
     }
 
-    public function resumen(): string {
+    public function resumen(): string
+    {
         return 'Libro: ' . $this->getTitulo() . ' - ' . $this->getAutor();
     }
 }

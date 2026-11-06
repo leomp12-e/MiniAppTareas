@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Classes;
 
-class Mapa extends MaterialBiblioteca {
-
+class Mapa extends MaterialBiblioteca
+{
     public function __construct(
         string $titulo,
         string $autor,
@@ -12,10 +13,17 @@ class Mapa extends MaterialBiblioteca {
         bool $disponible = true,
         int $id = 0
     ) {
-        parent::__construct($titulo, $autor, $anio, $disponible, $id);
+        parent::__construct(
+            $titulo,
+            $autor,
+            $anio,
+            $disponible,
+            $id
+        );
     }
 
-    public function tipoMaterial(): string {
+    public function tipoMaterial(): string
+    {
         return 'Mapa';
     }
 }

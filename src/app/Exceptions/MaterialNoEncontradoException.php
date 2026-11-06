@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Exceptions;
@@ -9,6 +10,8 @@ class MaterialNoEncontradoException extends RuntimeException
 {
     public function __construct(int $id)
     {
-        parent::__construct("No existe un material con id {$id}");
+        parent::__construct(
+            "No existe un material con id {$id}"
+        );
     }
 }

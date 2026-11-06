@@ -1,18 +1,16 @@
 <?php
-declare(strict_types=1);
 
-//require_once __DIR__ . '/Prestable.php';
-//require_once __DIR__ . '/Traits/TieneFechas.php';
-//require_once __DIR__ . '/Traits/Loggable.php';
+declare(strict_types=1);
 
 namespace App\Classes;
 
-use App\Classes\Traits\TieneFechas;
 use App\Classes\Traits\Loggable;
+use App\Classes\Traits\TieneFechas;
 
-
-class MaterialBiblioteca implements Prestable {
-    use TieneFechas, Loggable;    
+class MaterialBiblioteca implements Prestable
+{
+    use TieneFechas;
+    use Loggable;
 
     private int $id;
     private string $titulo;
@@ -27,75 +25,122 @@ class MaterialBiblioteca implements Prestable {
         bool $disponible = true,
         int $id = 0
     ) {
-        $this->titulo     = $titulo;
-        $this->autor      = $autor;
-        $this->anio       = $anio;
+        $this->titulo = $titulo;
+        $this->autor = $autor;
+        $this->anio = $anio;
         $this->disponible = $disponible;
-        $this->id         = $id;
+        $this->id = $id;
     }
 
-    public function getId(): int          { return $this->id; }
-    public function getTitulo(): string   { return $this->titulo; }
-    public function getAutor(): string    { return $this->autor; }
-    public function getAnio(): ?int       { return $this->anio; }
-    public function isDisponible(): bool  { return $this->disponible; }
-    public function setTitulo(string $t): void { $this->titulo = $t; }
-    public function setDisponible(bool $d): void { $this->disponible = $d; }
+    public function getId(): int
+    {
+        return $this->id;
+    }
 
-    
-    public function mostrarFicha(): string {
+    public function getTitulo(): string
+    {
+        return $this->titulo;
+    }
+
+    public function getAutor(): string
+    {
+        return $this->autor;
+    }
+
+    public function getAnio(): ?int
+    {
+        return $this->anio;
+    }
+
+    public function isDisponible(): bool
+    {
+        return $this->disponible;
+    }
+
+    public function setTitulo(string $t): void
+    {
+        $this->titulo = $t;
+    }
+
+    public function setDisponible(bool $d): void
+    {
+        $this->disponible = $d;
+    }
+
+    public function mostrarFicha(): string
+    {
         $anio = $this->anio ?? 's/f';
-        return sprintf('[%s] %s — %s (%s)',
-            $this->tipoMaterial(), $this->titulo, $this->autor, $anio
+
+        return sprintf(
+            '[%s] %s — %s (%s)',
+            $this->tipoMaterial(),
+            $this->titulo,
+            $this->autor,
+            $anio
         );
     }
 
-    public function tipoMaterial(): string {
+    public function tipoMaterial(): string
+    {
         return 'material';
     }
 
-    public function antiguedad(): int {
-        if ($this->anio === null) return 0;
-        return (int)date('Y') - $this->anio;
+    public function antiguedad(): int
+    {
+        if ($this->anio === null) {
+            return 0;
+        }
+
+        return (int) date('Y') - $this->anio;
     }
 
-    public function esAntiguo(): bool {
-        if($this->antiguedad() > 50) return true;
+    public function esAntiguo(): bool
+    {
+        return $this->antiguedad() > 50;
     }
 
-    public function setAnio(?int $a): void {
+    public function setAnio(?int $a): void
+    {
         $this->anio = $a;
     }
 
-    public function setAutor(string $a): void {
+    public function setAutor(string $a): void
+    {
         $this->autor = $a;
     }
 
-    public function resumen(): string {
+    public function resumen(): string
+    {
         return $this->tipoMaterial() . ':' . $this->titulo;
     }
 
-    public function prestar(): bool {
-        if(!$this->disponible) {
+    public function prestar(): bool
+    {
+        if (!$this->disponible) {
             $this->log("Intento fallido de prestamo: {$this->titulo}");
             return false;
         }
+
         $this->disponible = false;
         $this->log("Prestamo realizado: {$this->titulo}");
+
         return true;
     }
 
-    public function devolver(): void {
+    public function devolver(): void
+    {
         $this->disponible = true;
     }
 
-    public function puedePrestarse(): bool {
-        if($this->disponible && $this->anio !== null && $this->anio < 2010) {
-            return true;
-        } return false;
+    public function puedePrestarse(): bool
+    {
+        return $this->disponible
+            && $this->anio !== null
+            && $this->anio < 2010;
     }
-    
-    public function diasPrestamo(): int {
+
+    public function diasPrestamo(): int
+    {
         return 15;
     }
 }

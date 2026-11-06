@@ -1,32 +1,54 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Classes;
 
-
-class DVD extends MaterialBiblioteca {
+class DVD extends MaterialBiblioteca
+{
     private int $duracionMin;
 
     public function __construct(
-        string $titulo, string $autor, ?int $anio,
-        int $duracionMin, bool $disponible = true, int $id = 0
+        string $titulo,
+        string $autor,
+        ?int $anio,
+        int $duracionMin,
+        bool $disponible = true,
+        int $id = 0
     ) {
-        parent::__construct($titulo, $autor, $anio, $disponible, $id);
+        parent::__construct(
+            $titulo,
+            $autor,
+            $anio,
+            $disponible,
+            $id
+        );
+
         $this->duracionMin = $duracionMin;
     }
 
-    public function getDuracionMin(): int { return $this->duracionMin; }
-    public function tipoMaterial(): string { return 'DVD'; }
-    public function mostrarFicha(): string {
+    public function getDuracionMin(): int
+    {
+        return $this->duracionMin;
+    }
+
+    public function tipoMaterial(): string
+    {
+        return 'DVD';
+    }
+
+    public function mostrarFicha(): string
+    {
         return parent::mostrarFicha() . ' · ' . $this->duracionMin . ' min';
     }
 
-    public function diasPrestamo(): int {
+    public function diasPrestamo(): int
+    {
         return 3;
     }
 
-    public function puedePrestarse(): bool {
-        if($this->disponible) 
-            return true;
+    public function puedePrestarse(): bool
+    {
+        return $this->isDisponible();
     }
 }

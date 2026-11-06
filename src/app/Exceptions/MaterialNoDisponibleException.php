@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Exceptions;
@@ -9,6 +10,8 @@ class MaterialNoDisponibleException extends RuntimeException
 {
     public function __construct(string $titulo)
     {
-        parent::__construct("El material '{$titulo}' no esta disponible para préstamo");
+        parent::__construct(
+            "El material '{$titulo}' no esta disponible para préstamo"
+        );
     }
 }
