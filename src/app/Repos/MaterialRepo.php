@@ -94,6 +94,20 @@ class MaterialRepo
         return $out;
     }
 
+    
+    public function contarPrestamosActivos(int $usuarioId): int
+    {
+        $stmt = db()->prepare(
+            'SELECT COUNT(*) FROM prestamos
+            WHERE usuario_id = ? AND fecha_devolucion IS NULL'
+        );
+
+        $stmt->execute([$usuarioId]);
+
+        return (int) $stmt->fetchColumn();
+    }
+
+
     /**
      * Convierte una fila de la base de datos en el objeto PHP correcto.
      * También hidrata la fecha de creación desde 'creado_en'.
