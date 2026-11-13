@@ -7,8 +7,6 @@ require_once __DIR__ . '/../app/Includes/exceptions.php';
 require_once __DIR__ . '/../app/Includes/auth.php';
 
 use App\Repos\MaterialRepo;
-use PDO;
-use Throwable;
 use function App\Config\db;
 
 requireLogin();
